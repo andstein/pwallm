@@ -246,6 +246,42 @@ function setupEventListeners() {
   if (themeToggleMobile) {
     themeToggleMobile.addEventListener('click', cycleTheme);
   }
+
+  // PWA Install Prompt Handler
+  let deferredPrompt = null;
+  window.addEventListener('beforeinstallprompt', (e) => {
+    // Prevent the mini-infobar from appearing on mobile
+    e.preventDefault();
+    // Stash the event so it can be triggered later.
+    deferredPrompt = e;
+    // Show the install button
+    if (installPwaBtn) {
+      installPwaBtn.classList.remove('hide');
+    }
+  });
+
+  if (installPwaBtn) {
+    installPwaBtn.addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+      // Show the install prompt
+      deferredPrompt.prompt();
+      // Wait for the user to respond to the prompt
+      const { outcome } = await deferredPrompt.userChoice;
+      console.log(`User response to install: ${outcome}`);
+      // Discard prompt
+      deferredPrompt = null;
+      // Hide install button
+      installPwaBtn.classList.add('hide');
+    });
+  }
+
+  window.addEventListener('appinstalled', () => {
+    console.log('PWallm was installed successfully!');
+    deferredPrompt = null;
+    if (installPwaBtn) {
+      installPwaBtn.classList.add('hide');
+    }
+  });
 }
 
 // -------------------------------------------------------------
