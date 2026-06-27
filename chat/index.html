@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PWallm - Local Llama Client</title>
+  
+  <!-- PWA Meta Tags -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0b0816">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    
+    <!-- Mobile Header -->
+    <header class="mobile-nav">
+      <button id="sidebar-toggle" aria-label="Toggle Sidebar">
+        <i data-lucide="menu"></i>
+      </button>
+      <div class="brand">
+        <img src="icon.svg" alt="PWallm Logo" class="logo-img">
+        <span>PWallm</span>
+      </div>
+      <div style="display: flex; gap: 4px; align-items: center;">
+        <button id="theme-toggle-mobile" aria-label="Toggle Theme" style="background: transparent; border: none; color: var(--text-main); cursor: pointer; padding: 8px;">
+          <i data-lucide="monitor"></i>
+        </button>
+        <button id="settings-toggle-mobile" aria-label="Open Settings" style="background: transparent; border: none; color: var(--text-main); cursor: pointer; padding: 8px;">
+          <i data-lucide="sliders"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Sidebar Container -->
+    <aside class="sidebar" id="app-sidebar">
+      <div class="sidebar-header">
+        <div class="brand">
+          <img src="icon.svg" alt="PWallm Logo" class="logo-img">
+          <h1>PWallm</h1>
+        </div>
+        <button id="sidebar-close" class="mobile-only" aria-label="Close Sidebar">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+
+      <!-- Action Button -->
+      <button id="new-chat-btn" class="btn btn-primary btn-glow">
+        <i data-lucide="plus"></i>
+        <span>New Chat</span>
+      </button>
+
+      <!-- Conversations List -->
+      <div class="convo-list-section">
+        <h3>Conversations</h3>
+        <div class="convo-list" id="conversations-list">
+          <!-- Loaded dynamically -->
+          <div class="convo-empty-state">No conversations yet</div>
+        </div>
+      </div>
+
+      <!-- Server & Model Panel -->
+      <div class="server-panel">
+        <div class="server-config">
+          <div class="server-url-wrapper">
+            <label for="server-url">Llama Server URL</label>
+            <div class="input-with-button">
+              <input type="url" id="server-url" value="http://localhost:8080" placeholder="http://localhost:8080">
+              <button id="test-connection-btn" title="Ping Server">
+                <i data-lucide="refresh-cw" id="ping-icon"></i>
+              </button>
+            </div>
+          </div>
+          <div class="server-status">
+            <span class="status-label">Status:</span>
+            <span id="status-badge" class="badge badge-disconnected">Disconnected</span>
+          </div>
+        </div>
+
+        <div class="model-select-wrapper">
+          <label for="model-selector">Active Model</label>
+          <div class="select-with-button">
+            <select id="model-selector" disabled>
+              <option value="">No models available</option>
+            </select>
+            <button id="refresh-models-btn" title="Refresh Model List" disabled>
+              <i data-lucide="rotate-cw"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Overlay for mobile sidebar -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <!-- Main Chat Window -->
+    <main class="chat-area">
+      <!-- Chat Header -->
+      <header class="chat-header">
+        <div class="active-convo-info">
+          <h2 id="active-chat-title">New Conversation</h2>
+          <span id="active-model-badge" class="model-badge">No model selected</span>
+        </div>
+        <div class="header-actions">
+          <button id="theme-toggle-header" class="btn btn-secondary btn-icon-only" title="Toggle Theme">
+            <i data-lucide="monitor"></i>
+          </button>
+          <button id="install-pwa-btn" class="btn btn-secondary btn-icon-only hide" title="Install App">
+            <i data-lucide="download"></i>
+          </button>
+          <button id="settings-toggle" class="btn btn-secondary btn-icon-only" title="Settings">
+            <i data-lucide="sliders"></i>
+          </button>
+        </div>
+      </header>
+
+      <!-- Message Area -->
+      <div class="messages-container" id="messages-container">
+        <!-- Welcoming splash page if empty -->
+        <div class="welcome-splash" id="welcome-splash">
+          <div class="splash-logo">
+            <img src="icon.svg" alt="PWallm Logo" class="splash-logo-img">
+          </div>
+          <h2>Welcome to PWallm</h2>
+          <p>A fast, private, and fully offline-capable client for your local Llama.cpp server.</p>
+          
+          <div class="quick-start-cards">
+            <div class="card">
+              <i data-lucide="terminal"></i>
+              <h4>Start your Llama server</h4>
+              <p>Run <code>llama-server --port 8080 -m models/your-model.gguf</code> on your machine.</p>
+            </div>
+            <div class="card">
+              <i data-lucide="link"></i>
+              <h4>Connect & Choose</h4>
+              <p>Ensure the server URL matches and choose your loaded model from the sidebar.</p>
+            </div>
+            <div class="card">
+              <i data-lucide="message-square"></i>
+              <h4>Chat Locally</h4>
+              <p>All chats, settings, and documents are stored securely in your browser's local database.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Thinking Indicator -->
+      <div class="thinking-indicator-wrapper hide" id="thinking-indicator">
+        <div class="thinking-bubble">
+          <div class="typing-indicator">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <span class="thinking-text">Thinking...</span>
+        </div>
+      </div>
+
+      <!-- Chat Input Section -->
+      <div class="chat-input-container">
+        <!-- Live Statistics Panel -->
+        <div class="live-stats-bar hide" id="live-stats-bar">
+          <span class="stat-item"><i data-lucide="zap"></i> <span id="stat-tps">0.0</span> tok/s</span>
+          <span class="stat-item"><i data-lucide="clock"></i> <span id="stat-time">0.0s</span></span>
+          <span class="stat-item"><i data-lucide="hash"></i> <span id="stat-tokens">0</span> tokens</span>
+        </div>
+
+        <div class="input-form">
+          <textarea id="user-input" rows="1" placeholder="Type a message... (Cmd+Enter to send)" disabled></textarea>
+          
+          <div class="input-actions">
+            <button id="send-btn" class="btn btn-primary btn-round" title="Send message" disabled>
+              <i data-lucide="send"></i>
+            </button>
+            <button id="stop-btn" class="btn btn-danger btn-round hide" title="Stop generation">
+              <i data-lucide="square"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Settings Modal -->
+    <div class="modal-wrapper hide" id="settings-modal">
+      <div class="modal-backdrop"></div>
+      <div class="modal-content glass">
+        <div class="modal-header">
+          <h3>Advanced Settings</h3>
+          <button class="modal-close" id="settings-close">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="settings-group">
+            <label for="system-prompt">System Prompt</label>
+            <textarea id="system-prompt" rows="3" placeholder="You are a helpful, respectful, and honest assistant."></textarea>
+            <span class="input-hint">Defines the persona and behavior of the LLM.</span>
+          </div>
+          
+          <div class="settings-row">
+            <div class="settings-group half">
+              <label for="temp-slider">Temperature: <span id="temp-val">0.7</span></label>
+              <input type="range" id="temp-slider" min="0" max="2" step="0.1" value="0.7">
+              <span class="input-hint">Higher values make the output more creative.</span>
+            </div>
+            
+            <div class="settings-group half">
+              <label for="max-tokens-input">Max Tokens</label>
+              <input type="number" id="max-tokens-input" min="1" max="16384" value="2048">
+              <span class="input-hint">Limit output length.</span>
+            </div>
+          </div>
+
+          <div class="settings-group">
+            <label for="theme-selector">App Theme</label>
+            <select id="theme-selector" style="background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border-glass); border-radius: var(--radius-sm); color: var(--text-main); padding: 10px 14px; font-family: var(--font-sans); font-size: 14px; outline: none;">
+              <option value="system">System (Default)</option>
+              <option value="dark">Dark Mode</option>
+              <option value="light">Clear / Light Mode</option>
+            </select>
+            <span class="input-hint">Select your preferred user interface color scheme.</span>
+          </div>
+
+          <div class="settings-group">
+            <label>Cache Management</label>
+            <div class="danger-zone">
+              <button id="clear-all-data-btn" class="btn btn-danger">
+                <i data-lucide="trash-2"></i>
+                <span>Clear All Chats & History</span>
+              </button>
+            </div>
+            <span class="input-hint warning-text">This will permanently delete all conversations from IndexedDB.</span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="save-settings-btn" class="btn btn-primary">Save Changes</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- App Code -->
+  <script type="module" src="app.js"></script>
+
+  <!-- PWA Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then((reg) => console.log('Service Worker registered successfully:', reg.scope))
+          .catch((err) => console.error('Service Worker registration failed:', err));
+      });
+    }
+  </script>
+</body>
+</html>
