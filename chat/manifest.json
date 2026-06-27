@@ -1,6 +1,6 @@
 {
-  "name": "PWallm - Local Llama Chat",
-  "short_name": "PWallm",
+  "name": "pwallm - local llama chat",
+  "short_name": "pwallm",
   "description": "Progressive Web App client for local llama.cpp server",
   "start_url": "./",
   "scope": "./",
