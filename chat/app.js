@@ -287,6 +287,51 @@ function toggleSidebar(open) {
   }
 }
 
+// Try to ping a specific server URL
+async function testServerUrl(url) {
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 1200);
+    const response = await fetch(`${url}/v1/models`, {
+      method: 'GET',
+      headers: { 'Accept': 'application/json' },
+      signal: controller.signal
+    });
+    clearTimeout(timeoutId);
+    return response.ok;
+  } catch (err) {
+    return false;
+  }
+}
+
+// Auto-detect a working local server URL on startup
+async function autoDetectServer() {
+  // 1. Try currently configured URL
+  if (serverUrl && await testServerUrl(serverUrl)) {
+    return serverUrl;
+  }
+
+  // 2. Try default llama.cpp (127.0.0.1:8080)
+  const llamaUrl = 'http://127.0.0.1:8080';
+  if (await testServerUrl(llamaUrl)) {
+    serverUrl = llamaUrl;
+    localStorage.setItem('pwallm_server_url', serverUrl);
+    serverUrlInput.value = serverUrl;
+    return llamaUrl;
+  }
+
+  // 3. Try default LM Studio (127.0.0.1:1234)
+  const lmStudioUrl = 'http://127.0.0.1:1234';
+  if (await testServerUrl(lmStudioUrl)) {
+    serverUrl = lmStudioUrl;
+    localStorage.setItem('pwallm_server_url', serverUrl);
+    serverUrlInput.value = serverUrl;
+    return lmStudioUrl;
+  }
+
+  return null;
+}
+
 // -------------------------------------------------------------
 // Llama.cpp Server Integrations
 // -------------------------------------------------------------
@@ -301,6 +346,10 @@ async function checkServerConnection(isOnInit = false) {
     style.id = 'spin-keyframes';
     style.innerHTML = '@keyframes spin { 100% { transform: rotate(360deg); } }';
     document.head.appendChild(style);
+  }
+
+  if (isOnInit) {
+    await autoDetectServer();
   }
 
   try {

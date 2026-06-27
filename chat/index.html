@@ -97,18 +97,13 @@
         
         <!-- Welcome Splash / Settings (Home Screen) -->
         <div class="welcome-splash" id="welcome-splash">
-          <div class="splash-logo">
-            <img src="icon.svg" alt="pwallm Logo" class="splash-logo-img">
-          </div>
-          <h2>pwallm</h2>
-          <p class="splash-subtitle">A fast, private, and offline client for local llama servers.</p>
           
           <!-- Connection Config Area (Always visible on home screen) -->
           <div class="home-connection-card">
             <div class="settings-group">
               <label for="server-url">Llama Server URL</label>
               <div class="input-with-button">
-                <input type="url" id="server-url" value="http://localhost:8080" placeholder="http://localhost:8080">
+                <input type="url" id="server-url" value="http://127.0.0.1:8080" placeholder="http://127.0.0.1:8080">
                 <button id="test-connection-btn" title="Ping Server">
                   <i data-lucide="refresh-cw" id="ping-icon"></i>
                 </button>
@@ -122,8 +117,8 @@
           
           <!-- Panel 1: Offline Setup Instructions (Visible when disconnected) -->
           <div class="server-offline-overlay" id="server-offline-overlay">
-            <h3>Local Server Required</h3>
-            <p style="font-size: 13px; margin-bottom: 20px; color: var(--text-muted);">Could not connect to a local server. Please start a local server using one of these options:</p>
+            <h3><i data-lucide="alert-triangle"></i> LOCAL SERVER REQUIRED</h3>
+            <p class="critical-warning-text"><strong>CRITICAL:</strong> pwallm is a local client. Chat functions, model listings, and parameters will remain disabled until a local llama.cpp or LM Studio server is running and configured correctly.</p>
             
             <div class="setup-options">
               <div class="setup-card">

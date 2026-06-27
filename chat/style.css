@@ -815,21 +815,30 @@ html, body {
 
 /* Offline instructions */
 .server-offline-overlay {
-  background: rgba(239, 68, 68, 0.02);
-  border: 1px solid rgba(239, 68, 68, 0.15);
-  padding: 16px;
+  background: rgba(239, 68, 68, 0.08);
+  border: 2px solid var(--color-danger);
+  padding: 20px;
   text-align: left;
 }
 
 .server-offline-overlay h3 {
   font-family: var(--font-title);
-  font-size: 14px;
-  font-weight: 600;
-  color: #fca5a5;
-  margin-bottom: 6px;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-danger);
+  margin-bottom: 10px;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+}
+
+.critical-warning-text {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-main);
+  margin-bottom: 16px;
+  border-left: 3px solid var(--color-danger);
+  padding-left: 10px;
 }
 
 .setup-options {
