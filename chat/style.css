@@ -853,10 +853,28 @@ html, body {
   padding: 10px;
 }
 
+.setup-card.highlighted-option {
+  border: 1px solid var(--border-glass);
+  border-left: 3px solid var(--accent-indigo);
+  background: rgba(99, 102, 241, 0.04);
+}
+
 .setup-card h4 {
   font-size: 12px;
   font-weight: 600;
   margin-bottom: 6px;
+  color: var(--text-main);
+}
+
+.setup-card.highlighted-option h4 {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--accent-indigo);
+}
+
+.setup-card.highlighted-option p {
+  font-size: 12px;
+  font-weight: 500;
   color: var(--text-main);
 }
 

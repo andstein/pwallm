@@ -121,19 +121,19 @@
             <p class="critical-warning-text"><strong>CRITICAL:</strong> pwallm is a local client. Chat functions, model listings, and parameters will remain disabled until a local llama.cpp or LM Studio server is running and configured correctly.</p>
             
             <div class="setup-options">
-              <div class="setup-card">
-                <h4>Option 1: llama.cpp (CLI)</h4>
-                <p>Install via Homebrew:</p>
-                <pre><code>brew install llama.cpp</code></pre>
-                <p>Start the server with a GGUF model:</p>
-                <pre><code>llama-server -hf google/gemma-2-9b-it-Q4_K_M.gguf</code></pre>
-              </div>
-              
-              <div class="setup-card">
-                <h4>Option 2: LM Studio (Desktop App)</h4>
+              <div class="setup-card highlighted-option">
+                <h4>Option 1: LM Studio (Desktop App) — Recommended</h4>
                 <p>Download from <a href="https://lmstudio.ai" target="_blank">lmstudio.ai</a>.</p>
                 <p>Start the local server (<a href="https://lmstudio.ai/docs/developer/core/server" target="_blank">guide</a>).</p>
                 <p class="warning-text">Make sure to enable <strong>CORS</strong> in server settings.</p>
+              </div>
+
+              <div class="setup-card">
+                <h4>Option 2: llama.cpp (CLI)</h4>
+                <p>Install via Homebrew:</p>
+                <pre><code>brew install llama.cpp</code></pre>
+                <p>Start the server with a GGUF model:</p>
+                <pre><code>llama-server -hf google/gemma-4-12B-it-qat-q4_0-gguf</code></pre>
               </div>
             </div>
           </div>
